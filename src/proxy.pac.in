@@ -1,0 +1,10 @@
+// vim: set ft=javascript:
+
+'use strict';
+
+function FindProxyForURL(url) {
+    if (url === '$swf_path$' || url === 'http://www.iqiyi.com/fake_proxied_post') {
+        return 'PROXY localhost:$port$';
+    }
+    return 'DIRECT';
+}
