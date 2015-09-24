@@ -1,3 +1,4 @@
+#!/bin/bash
 SWF_NAME=MainPlayer_5_2_28_c3_3_7_5
 ABC_INDEX=0
 ABC_ID="${SWF_NAME}-${ABC_INDEX}"
