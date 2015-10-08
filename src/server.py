@@ -1,17 +1,19 @@
+import functools
 import http.server
 import os.path
-import json
 
-with open('params.json', 'r') as f:
-    params = json.load(f)
+from config import PORT
 
 
 class Handler(http.server.BaseHTTPRequestHandler):
     def __init__(self, *args, **kwargs):
-        files = [
-            params['swf_path'],
-            '/proxy.pac',
-        ]
+        self.swf_path = kwargs['swf_path']
+        del kwargs['swf_path']
+
+        self.collected_data = kwargs['collected_data']
+        del kwargs['collected_data']
+
+        files = [self.swf_path, '/proxy.pac']
 
         self.files_dict = {
             filename: os.path.basename(filename)
@@ -30,8 +32,8 @@ class Handler(http.server.BaseHTTPRequestHandler):
             if os.path.exists(cur_file + '.in'):
                 with open(cur_file + '.in', 'rb') as f:
                     content = f.read().decode('utf-8')
-                for k, v in params.items():
-                    content = content.replace('$%s$' % k, str(v))
+                content = content.replace(
+                    '$PORT$', str(PORT)).replace('$SWF_PATH$', self.swf_path)
                 content = content.encode('utf-8')
             else:
                 with open(cur_file, 'rb') as f:
@@ -44,19 +46,32 @@ class Handler(http.server.BaseHTTPRequestHandler):
 
     def do_POST(self):
         length = int(self.headers.get('Content-Length', None))
-        print(self.rfile.read(length))
+        cur_data = self.rfile.read(length).decode('utf-8')
         self.send_response(200)
         self.end_headers()
 
+        print(cur_data)
+        self.collected_data.append(cur_data)
 
-def main():
-    port = params['port']
-
-    httpd = http.server.HTTPServer(('', port), Handler)
-
-    print('serving at port %d' % port)
-    httpd.serve_forever()
+    def log_message(self, *args, **kwargs):
+        pass
 
 
-if __name__ == '__main__':
-    main()
+def run_server(swf_path, lock):
+    lock.acquire()
+
+    collected_data = []
+
+    httpd = http.server.HTTPServer(
+        ('', PORT), functools.partial(
+            Handler, swf_path=swf_path, collected_data=collected_data))
+
+    print('serving at port %d' % PORT)
+
+    while len(collected_data) < 2:
+        httpd.handle_request()
+
+    print('Proxy server done')
+    lock.release()
+
+    return collected_data

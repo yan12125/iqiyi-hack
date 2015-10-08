@@ -2,3 +2,5 @@
 *.swf
 *.abc
 *.asasm
+
+*.pyc
