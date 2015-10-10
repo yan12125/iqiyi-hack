@@ -12,7 +12,7 @@
 +     getlocal1
 +     getscopeobject      1
 +     getslot             17
-+     pushstring          ""
++     pushstring          ","
 +     callproperty        QName(Namespace("http://adobe.com/AS3/2006/builtin"), "join"), 1
 +     setproperty         QName(PackageNamespace(""),"data")
 +     getlocal1
