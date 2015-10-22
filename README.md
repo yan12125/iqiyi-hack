@@ -11,6 +11,7 @@ Inspired by https://github.com/soimort/you-get/pull/655
 * Python 3
 * Firefox
 * Selenium
+* PyVirtualDisplay (optional, enables running without an actual X server)
 
 On Arch Linux, the following command is sufficient:
 ```
