@@ -1,8 +1,8 @@
 --- Zombie.class.asasm.old	2015-09-23 23:07:38.877262083 +0800
-+++ Zombie.class.asasm	2015-09-23 23:08:05.883929652 +0800
++++ Zombie.class.asasm		2015-09-23 23:08:05.883929652 +0800
 @@ -1326,6 +1326,28 @@
-      coerce_s
-      setslot             37
+      convert_u
+      setslot             34
  
 +     findpropstrict      QName(PackageNamespace("flash.net"),"URLRequest")
 +     pushstring          "http://www.iqiyi.com/fake_proxied_post"
@@ -12,7 +12,7 @@
 +     getlocal1
 +     getscopeobject      1
 +     getslot             17
-+     pushstring          ","
++     pushstring          ""
 +     callproperty        QName(Namespace("http://adobe.com/AS3/2006/builtin"), "join"), 1
 +     setproperty         QName(PackageNamespace(""),"data")
 +     getlocal1
@@ -27,5 +27,5 @@
 +     callpropvoid        QName(PackageNamespace(""),"load"), 1
 +
       getscopeobject      1
-      getslot             37
-      getproperty         QName(PackageNamespace(""), "length")
+      getslot             2
+      getglobalscope
