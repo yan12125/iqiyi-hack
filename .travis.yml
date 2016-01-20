@@ -3,4 +3,5 @@ python:
   - "2.7"
   - "3.5"
 install: "pip install -r requirements.txt"
+sudo: false
 script: python ./src/get_swf.py
