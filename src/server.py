@@ -3,6 +3,7 @@ import http.server
 import os.path
 
 from config import PORT
+from common import full_path
 
 
 class Handler(http.server.BaseHTTPRequestHandler):
@@ -16,7 +17,7 @@ class Handler(http.server.BaseHTTPRequestHandler):
         files = [self.swf_path, '/proxy.pac']
 
         self.files_dict = {
-            filename: os.path.basename(filename)
+            filename: full_path(os.path.basename(filename))
             for filename in files
         }
 

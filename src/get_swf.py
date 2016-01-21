@@ -9,6 +9,7 @@ import urllib.request
 from config import PAGE_URL
 from server import run_server
 from selenium_runner import SeleniumRunner
+from common import full_path
 
 
 def get_swf():
@@ -17,39 +18,45 @@ def get_swf():
     webpage = urlh.read().decode('utf-8')
     urlh.close()
     mobj = re.search(r'http://[^\'"]+MainPlayer[^.]+\.swf', webpage)
-    swf_path = mobj.group(0)
+    swf_url = mobj.group(0)
+    swf_path = full_path(os.path.basename(swf_url))
 
-    print('SWF path is %s' % swf_path)
+    print('SWF URL is %s' % swf_url)
 
-    urllib.request.urlretrieve(swf_path, filename=os.path.basename(swf_path))
-    return swf_path
+    urllib.request.urlretrieve(swf_url, filename=swf_path)
+    return swf_path, swf_url
 
 
-def patch_swf(swf_name):
-    swf_name = os.path.splitext(swf_name)[0]
+def run(args):
+    print(' '.join(args))
+    subprocess.check_call(args)
+
+
+def patch_swf(swf_path):
+    swf_name = os.path.splitext(os.path.basename(swf_path))[0]
     abc_index = 0
     abc_id = '%s-%d' % (swf_name, abc_index)
 
     try:
-        os.remove('%s.abc' % abc_id)
-        shutil.rmtree(abc_id)
+        os.remove(full_path('%s.abc' % abc_id))
+        shutil.rmtree(full_path(abc_id))
     except FileNotFoundError:
         pass
 
-    subprocess.check_call(['abcexport', '%s.swf' % swf_name])
-    subprocess.check_call(['rabcdasm', '%s.abc' % abc_id])
+    run(['abcexport', full_path('%s.swf' % swf_name)])
+    run(['rabcdasm', full_path('%s.abc' % abc_id)])
     subprocess.Popen([
-        'patch', '-p0', '-i', '../asasm.patch'], cwd=abc_id).wait()
-    subprocess.check_call(['rabcasm', '%s/%s.main.asasm' % (abc_id, abc_id)])
-    subprocess.check_call([
-        'abcreplace', '%s.swf' % swf_name, str(abc_index),
-        '%s/%s.main.abc' % (abc_id, abc_id)])
+        'patch', '-p0', '-i', '../asasm.patch'], cwd=full_path(abc_id)).wait()
+    run(['rabcasm', full_path('%s/%s.main.asasm' % (abc_id, abc_id))])
+    run([
+        'abcreplace', full_path('%s.swf' % swf_name), str(abc_index),
+        full_path('%s/%s.main.abc' % (abc_id, abc_id))])
 
 if __name__ == '__main__':
     lock = threading.Lock()
-    swf_path = get_swf()
-    patch_swf(os.path.basename(swf_path))
+    swf_path, swf_url = get_swf()
+    patch_swf(swf_path)
     SeleniumRunner(lock).start()
-    collected_data = run_server(swf_path, lock)
+    collected_data = run_server(swf_url, lock)
     enc_key = os.path.commonprefix(collected_data)
     print('enc_key = %s' % enc_key)
