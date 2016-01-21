@@ -4,6 +4,8 @@ python:
   - "3.5"
 install: 
   - pip install -r requirements.txt
+  - bash devscripts/install_dmd2.sh
+  - export PATH=$PATH:$HOME/dmd2/linux/bin64
   - bash devscripts/build_rabcdasm.sh
 sudo: false
 before_script: export PATH=$PATH:$HOME/RABCDAsm
