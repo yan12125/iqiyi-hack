@@ -10,3 +10,7 @@ install:
 sudo: false
 before_script: export PATH=$PATH:$HOME/RABCDAsm
 script: python ./src/get_swf.py
+addons:
+  apt:
+    packages:
+      - flashplugin-installer
