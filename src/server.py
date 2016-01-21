@@ -63,7 +63,7 @@ class Handler(compat_http_server.BaseHTTPRequestHandler, object):
         pass
 
 
-def run_server(swf_path, lock):
+def run_server(swf_path, lock, data_count=1):
     lock.acquire()
 
     collected_data = []
@@ -74,7 +74,7 @@ def run_server(swf_path, lock):
 
     print('serving at port %d' % PORT)
 
-    while len(collected_data) < 2:
+    while len(collected_data) < data_count:
         httpd.handle_request()
 
     print('Proxy server done')
