@@ -1,3 +1,4 @@
+import errno
 import os
 import os.path
 import re
@@ -48,8 +49,9 @@ def patch_swf(swf_path):
     try:
         os.remove(full_path('%s.abc' % abc_id))
         shutil.rmtree(full_path(abc_id))
-    except FileNotFoundError:
-        pass
+    except OSError as e:
+        if e.errno != errno.ENOENT:
+            raise
 
     run(['abcexport', full_path('%s.swf' % swf_name)])
     run(['rabcdasm', full_path('%s.abc' % abc_id)])
