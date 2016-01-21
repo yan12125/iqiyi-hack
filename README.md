@@ -8,7 +8,7 @@ Inspired by https://github.com/soimort/you-get/pull/655
 
 ## Dependencies
 * rabcdasm
-* Python 3
+* Python 2 or Python 3
 * Firefox
 * Selenium
 * PyVirtualDisplay (optional, enables running without an actual X server)

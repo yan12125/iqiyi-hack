@@ -4,7 +4,15 @@ import re
 import shutil
 import subprocess
 import threading
-import urllib.request
+try:
+    from urllib.request import urlopen as compat_urllib_request_urlopen
+except ImportError:
+    from urllib2 import urlopen as compat_urllib_request_urlopen
+
+try:
+    from urllib.request import urlretrieve as compat_urllib_request_urlretrieve
+except ImportError:
+    from urllib import urlretrieve as compat_urllib_request_urlretrieve
 
 from config import PAGE_URL
 from server import run_server
@@ -14,7 +22,7 @@ from common import full_path
 
 def get_swf():
     print('Downloading the page %s' % PAGE_URL)
-    urlh = urllib.request.urlopen(PAGE_URL)
+    urlh = compat_urllib_request_urlopen(PAGE_URL)
     webpage = urlh.read().decode('utf-8')
     urlh.close()
     mobj = re.search(r'http://[^\'"]+MainPlayer[^.]+\.swf', webpage)
@@ -23,7 +31,7 @@ def get_swf():
 
     print('SWF URL is %s' % swf_url)
 
-    urllib.request.urlretrieve(swf_url, filename=swf_path)
+    compat_urllib_request_urlretrieve(swf_url, filename=swf_path)
     return swf_path, swf_url
 
 

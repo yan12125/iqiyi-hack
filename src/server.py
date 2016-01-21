@@ -1,12 +1,17 @@
 import functools
-import http.server
 import os.path
+try:
+    import http.server as compat_http_server
+except ImportError:
+    import BaseHTTPServer as compat_http_server
 
 from config import PORT
 from common import full_path
 
 
-class Handler(http.server.BaseHTTPRequestHandler):
+# BaseHTTPRequestHandler is an old-style class, which fails super()
+# http://stackoverflow.com/a/11810015/3786245
+class Handler(compat_http_server.BaseHTTPRequestHandler, object):
     def __init__(self, *args, **kwargs):
         self.swf_path = kwargs['swf_path']
         del kwargs['swf_path']
@@ -63,7 +68,7 @@ def run_server(swf_path, lock):
 
     collected_data = []
 
-    httpd = http.server.HTTPServer(
+    httpd = compat_http_server.HTTPServer(
         ('', PORT), functools.partial(
             Handler, swf_path=swf_path, collected_data=collected_data))
 
