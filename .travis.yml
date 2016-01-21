@@ -2,6 +2,9 @@ language: python
 python:
   - "2.7"
   - "3.5"
-install: "pip install -r requirements.txt"
+install: 
+  - pip install -r requirements.txt
+  - bash devscripts/build_rabcdasm.sh
 sudo: false
+before_script: export PATH=$PATH:$HOME/RABCDAsm
 script: python ./src/get_swf.py
