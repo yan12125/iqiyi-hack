@@ -19,6 +19,9 @@ class Handler(compat_http_server.BaseHTTPRequestHandler, object):
         self.collected_data = kwargs['collected_data']
         del kwargs['collected_data']
 
+        self.domain = kwargs['domain']
+        del kwargs['domain']
+
         files = [self.swf_path, '/proxy.pac']
 
         self.files_dict = {
@@ -38,8 +41,9 @@ class Handler(compat_http_server.BaseHTTPRequestHandler, object):
             if os.path.exists(cur_file + '.in'):
                 with open(cur_file + '.in', 'rb') as f:
                     content = f.read().decode('utf-8')
-                content = content.replace(
-                    '$PORT$', str(PORT)).replace('$SWF_PATH$', self.swf_path)
+                content = (content.replace('$PORT$', str(PORT))
+                                  .replace('$SWF_PATH$', self.swf_path)
+                                  .replace('$DOMAIN$', self.domain))
                 content = content.encode('utf-8')
             else:
                 with open(cur_file, 'rb') as f:
@@ -63,14 +67,15 @@ class Handler(compat_http_server.BaseHTTPRequestHandler, object):
         pass
 
 
-def run_server(swf_path, lock, data_count=1):
+def run_server(swf_path, lock, domain, data_count=1):
     lock.acquire()
 
     collected_data = []
 
     httpd = compat_http_server.HTTPServer(
         ('', PORT), functools.partial(
-            Handler, swf_path=swf_path, collected_data=collected_data))
+            Handler, swf_path=swf_path, collected_data=collected_data,
+            domain=domain))
 
     print('serving at port %d' % PORT)
 

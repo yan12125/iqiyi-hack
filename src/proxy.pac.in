@@ -3,7 +3,7 @@
 'use strict';
 
 function FindProxyForURL(url) {
-    if (url === '$SWF_PATH$' || url === 'http://www.iqiyi.com/fake_proxied_post') {
+    if (url === '$SWF_PATH$' || url === 'http://$DOMAIN$/fake_proxied_post') {
         return 'PROXY localhost:$PORT$';
     }
     return 'DIRECT';

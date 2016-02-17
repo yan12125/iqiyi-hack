@@ -6,12 +6,13 @@ try:
 except ImportError:
     pass
 
-from config import PORT, PAGE_URL
+from config import PORT
 
 
 class SeleniumRunner(threading.Thread):
-    def __init__(self, lock):
+    def __init__(self, lock, page_url):
         self.lock = lock
+        self.page_url = page_url
 
         super(SeleniumRunner, self).__init__()
 
@@ -32,7 +33,7 @@ class SeleniumRunner(threading.Thread):
         })
 
         driver = webdriver.Firefox(proxy=proxy)
-        driver.get(PAGE_URL)
+        driver.get(self.page_url)
 
         print('Waiting for the proxy server')
 

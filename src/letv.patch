@@ -1,0 +1,29 @@
+--- com/letv/player/model/proxy/CloudProxy.class.asasm.orig	2016-02-17 21:27:50.763884485 +0800
++++ com/letv/player/model/proxy/CloudProxy.class.asasm	2016-02-17 21:29:28.043880699 +0800
+@@ -633,6 +633,26 @@
+       getlocal3
+       iflt                L23
+ 
++      findpropstrict      QName(PackageNamespace("flash.net"),"URLRequest")
++      pushstring          "http://yuntv.letv.com/fake_proxied_post"
++      constructprop       QName(PackageNamespace("flash.net"),"URLRequest"), 1
++      coerce              QName(PackageNamespace("flash.net"),"URLRequest")
++      setlocal1
++      getlocal1
++      getlex              QName(PackageNamespace("com.letv.player.model"), "EmbedConfig")
++      getproperty         QName(PackageNamespace(""), "KEY")
++      setproperty         QName(PackageNamespace(""),"data")
++      getlocal1
++      pushstring          "POST"
++      setproperty         QName(PackageNamespace(""),"method")
++      findpropstrict      QName(PackageNamespace("flash.net"),"URLLoader")
++      constructprop       QName(PackageNamespace("flash.net"),"URLLoader"), 0
++      coerce              QName(PackageNamespace("flash.net"),"URLLoader")
++      setlocal2
++      getlocal2
++      getlocal1
++      callpropvoid        QName(PackageNamespace(""),"load"), 1
++
+       getlex              QName(PackageNamespace("com.adobe.crypto"), "MD5")
+       getlocal            4
+       getlex              QName(PackageNamespace("com.letv.player.model"), "EmbedConfig")
