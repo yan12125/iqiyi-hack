@@ -1,6 +1,7 @@
 import threading
 from selenium import webdriver
 from selenium.webdriver.common.proxy import Proxy, ProxyType
+from selenium.common.exceptions import TimeoutException
 try:
     import pyvirtualdisplay
 except ImportError:
@@ -33,7 +34,12 @@ class SeleniumRunner(threading.Thread):
         })
 
         driver = webdriver.Firefox(proxy=proxy)
-        driver.get(self.page_url)
+        driver.set_page_load_timeout(10)
+        try:
+            driver.get(self.page_url)
+        except TimeoutException:
+            # Not requiring fully loading the page. Just need proxied requests
+            pass
 
         print('Waiting for the proxy server')
 
