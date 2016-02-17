@@ -1,3 +1,4 @@
+import contextlib
 import errno
 import importlib
 import os
@@ -11,6 +12,8 @@ try:
     from urllib.request import urlretrieve as compat_urllib_request_urlretrieve
 except ImportError:
     from urllib import urlretrieve as compat_urllib_request_urlretrieve
+
+import patch
 
 from server import run_server
 from selenium_runner import SeleniumRunner
@@ -29,6 +32,14 @@ def run(args):
     subprocess.check_call(args)
 
 
+@contextlib.contextmanager
+def cd(path):
+    old_path = os.getcwd()
+    os.chdir(path)
+    yield
+    os.chdir(old_path)
+
+
 def patch_swf(target_site, swf_path):
     swf_name = os.path.splitext(os.path.basename(swf_path))[0]
     abc_index = 0
@@ -43,9 +54,10 @@ def patch_swf(target_site, swf_path):
 
     run(['abcexport', full_path('%s.swf' % swf_name)])
     run(['rabcdasm', full_path('%s.abc' % abc_id)])
-    subprocess.Popen([
-        'patch', '-p0', '-i', os.path.join('..', target_site.PATCH_FILENAME)],
-        cwd=full_path(abc_id)).wait()
+    with cd(full_path(abc_id)):
+        pto = patch.fromfile(os.path.join('..', target_site.PATCH_FILENAME))
+        print('Applying ' + target_site.PATCH_FILENAME)
+        pto.apply()
     run(['rabcasm', full_path('%s/%s.main.asasm' % (abc_id, abc_id))])
     run([
         'abcreplace', full_path('%s.swf' % swf_name), str(abc_index),

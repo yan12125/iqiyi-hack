@@ -14,10 +14,12 @@ Inspired by https://github.com/soimort/you-get/pull/655
 * Firefox
 * Selenium
 * PyVirtualDisplay (optional, enables running without an actual X server)
+* python-patch
 
 On Arch Linux, the following command is sufficient:
 ```
-yaourt -S --needed rabcdasm-git python firefox freshplayerplugin-git chromium-pepper-flash python-selenium
+yaourt -S --needed rabcdasm-git python-pip firefox freshplayerplugin-git chromium-pepper-flash
+pip install --user -r requirements.txt
 ```
 
 ## Usage
