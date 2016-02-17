@@ -1,5 +1,7 @@
 # iqiyi-hack
 
+[![Build Status](https://travis-ci.org/yan12125/iqiyi-hack.svg?branch=master)](https://travis-ci.org/yan12125/iqiyi-hack)
+
 Inspired by https://github.com/soimort/you-get/pull/655
 
 ## Features:
@@ -20,5 +22,7 @@ yaourt -S --needed rabcdasm-git python firefox freshplayerplugin-git chromium-pe
 
 ## Usage
 1. cd src/
-2. python3 get\_swf.py
+2. python3 get\_swf.py iqiyi
 3. The key will be printed in the console
+
+To hack letv key, replace iqiyi with letv in the second command
