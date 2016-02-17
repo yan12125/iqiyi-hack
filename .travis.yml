@@ -9,7 +9,9 @@ install:
   - bash devscripts/build_rabcdasm.sh
 sudo: false
 before_script: export PATH=$PATH:$HOME/RABCDAsm
-script: python ./src/get_swf.py
+script:
+  - python ./src/get_swf.py iqiyi
+  - python ./src/get_swf.py letv
 addons:
   apt:
     packages:
