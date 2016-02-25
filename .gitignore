@@ -1,5 +1,5 @@
 /playground/
-*.swf
+*.swf*
 *.abc
 *.asasm
 
