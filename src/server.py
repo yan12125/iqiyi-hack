@@ -13,20 +13,21 @@ from common import full_path
 # http://stackoverflow.com/a/11810015/3786245
 class Handler(compat_http_server.BaseHTTPRequestHandler, object):
     def __init__(self, *args, **kwargs):
-        self.swf_path = kwargs['swf_path']
+        swf_path = kwargs['swf_path']
         del kwargs['swf_path']
+
+        self.swf_url = kwargs['swf_url']
+        del kwargs['swf_url']
 
         self.collected_data = kwargs['collected_data']
         del kwargs['collected_data']
 
-        self.domain = kwargs['domain']
-        del kwargs['domain']
-
-        files = [self.swf_path, '/proxy.pac']
+        self.target_site = kwargs['target_site']
+        del kwargs['target_site']
 
         self.files_dict = {
-            filename: full_path(os.path.basename(filename))
-            for filename in files
+            '/proxy.pac': full_path('proxy.pac'),
+            self.swf_url: full_path(swf_path),
         }
 
         super(Handler, self).__init__(*args, **kwargs)
@@ -42,12 +43,14 @@ class Handler(compat_http_server.BaseHTTPRequestHandler, object):
                 with open(cur_file + '.in', 'rb') as f:
                     content = f.read().decode('utf-8')
                 content = (content.replace('$PORT$', str(PORT))
-                                  .replace('$SWF_PATH$', self.swf_path)
-                                  .replace('$DOMAIN$', self.domain))
+                                  .replace('$SWF_PATH$', self.swf_url)
+                                  .replace('$DOMAIN$', self.target_site.DOMAIN))
                 content = content.encode('utf-8')
             else:
                 with open(cur_file, 'rb') as f:
                     content = f.read()
+                    if hasattr(self.target_site, 'encrypt_swf'):
+                        content = self.target_site.encrypt_swf(content)
 
             self.wfile.write(content)
         else:
@@ -67,15 +70,15 @@ class Handler(compat_http_server.BaseHTTPRequestHandler, object):
         pass
 
 
-def run_server(swf_path, lock, domain, data_count=1):
+def run_server(swf_path, swf_url, lock, target_site, data_count=1):
     lock.acquire()
 
     collected_data = []
 
     httpd = compat_http_server.HTTPServer(
         ('', PORT), functools.partial(
-            Handler, swf_path=swf_path, collected_data=collected_data,
-            domain=domain))
+            Handler, swf_path=swf_path, swf_url=swf_url,
+            collected_data=collected_data, target_site=target_site))
 
     print('serving at port %d' % PORT)
 
