@@ -1,0 +1,38 @@
+--- sample/loaderDanmu/F_sub_C5E3.method.asasm.orig	2016-02-25 19:25:04.427274092 +0800
++++ sample/loaderDanmu/F_sub_C5E3.method.asasm	2016-02-25 19:25:10.613940518 +0800
+@@ -3,7 +3,7 @@
+  returns QName(PackageNamespace(""), "void")
+  body
+   maxstack 3
+-  localcount 8
++  localcount 10
+   initscopedepth 0
+   maxscopedepth 2
+   code
+@@ -240,6 +240,26 @@
+    findpropstrict      Multiname("F_snprintf", [PackageNamespace("sample.loaderDanmu__3A__5C_FlasCC_1_2E_0_2E_0_5C_cygwin_5C_tmp_5C_cclLXE9m_2E_o_3A_32908bc0_2D_81d5_2D_4eff_2D_8445_2D_5a943b2c504d"), PackageNamespace("avm2.intrinsics.memory"), PackageNamespace("sample.loaderDanmu"), PackageInternalNs("sample.loaderDanmu"), PrivateNamespace(null, "#11"), PackageNamespace(""), Namespace("http://adobe.com/AS3/2006/builtin")])
+    callpropvoid        Multiname("F_snprintf", [PackageNamespace("sample.loaderDanmu__3A__5C_FlasCC_1_2E_0_2E_0_5C_cygwin_5C_tmp_5C_cclLXE9m_2E_o_3A_32908bc0_2D_81d5_2D_4eff_2D_8445_2D_5a943b2c504d"), PackageNamespace("avm2.intrinsics.memory"), PackageNamespace("sample.loaderDanmu"), PackageInternalNs("sample.loaderDanmu"), PrivateNamespace(null, "#11"), PackageNamespace(""), Namespace("http://adobe.com/AS3/2006/builtin")]), 0
+ 
++   findpropstrict      QName(PackageNamespace("flash.net"),"URLRequest")
++   pushstring          "http://www.douyutv.com/fake_proxied_post"
++   constructprop       QName(PackageNamespace("flash.net"),"URLRequest"), 1
++   coerce              QName(PackageNamespace("flash.net"),"URLRequest")
++   setlocal            9
++   getlocal            9
++   getlex              QName(PackageNamespace("sample.loaderDanmu"),"CModule")
++   getlocal3
++   pushbyte            16
++   callproperty        QName(PackageNamespace(""),"readString"), 2
++   setproperty         QName(PackageNamespace(""),"data")
++   getlocal            9
++   pushstring          "POST"
++   coerce_a
++   setproperty         QName(PackageNamespace(""),"method")
++   findpropstrict      QName(PackageNamespace("flash.net"),"URLLoader")
++   constructprop       QName(PackageNamespace("flash.net"),"URLLoader"), 0
++   getlocal            9
++   callpropvoid        QName(PackageNamespace(""),"load"), 1
++
+    getlocal2
+    pushbyte            16
+    add
