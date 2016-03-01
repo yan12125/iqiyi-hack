@@ -1,11 +1,13 @@
 --- sample/loaderDanmu/F_sub_C5E3.method.asasm.orig	2016-02-25 19:25:04.427274092 +0800
 +++ sample/loaderDanmu/F_sub_C5E3.method.asasm	2016-02-25 19:25:10.613940518 +0800
-@@ -3,7 +3,7 @@
+@@ -2,8 +2,8 @@
+  refid "sample.loaderDanmu:F_sub_C5E3"
   returns QName(PackageNamespace(""), "void")
   body
-   maxstack 3
+-  maxstack 3
 -  localcount 8
-+  localcount 10
++  maxstack 4
++  localcount 11
    initscopedepth 0
    maxscopedepth 2
    code
@@ -23,10 +25,10 @@
 +   getlocal3
 +   pushbyte            16
 +   callproperty        QName(PackageNamespace(""),"readString"), 2
++   coerce_s
 +   setproperty         QName(PackageNamespace(""),"data")
 +   getlocal            9
 +   pushstring          "POST"
-+   coerce_a
 +   setproperty         QName(PackageNamespace(""),"method")
 +   findpropstrict      QName(PackageNamespace("flash.net"),"URLLoader")
 +   constructprop       QName(PackageNamespace("flash.net"),"URLLoader"), 0
