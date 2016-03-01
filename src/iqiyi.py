@@ -15,8 +15,10 @@ def get_site_swf():
     urlh = compat_urllib_request_urlopen(PAGE_URL)
     webpage = urlh.read().decode('utf-8')
     urlh.close()
-    mobj = re.search(r'http://[^\'"]+MainPlayer[^.]+\.swf', webpage)
-    swf_url = mobj.group(0)
+    mobj = re.search(
+        r'data-flashplayerparam-flashurl="(http://[^"]+.swf)"',
+        webpage)
+    swf_url = mobj.group(1)
 
     print('SWF URL is %s' % swf_url)
 
