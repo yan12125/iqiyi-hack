@@ -1,10 +1,28 @@
+import re
+
+from common import compat_urllib_request
+
 PAGE_URL = 'http://www.douyutv.com/iseven'
 DOMAIN = 'www.douyutv.com'
 PATCH_FILENAME = 'douyu.patch'
 
 
 def get_site_swf():
-    return 'http://staticlive.douyutv.com/common/simplayer/core.swf?v26710'
+    HOME_URL = 'http://www.douyutv.com/'
+    print('Downloading the page %s' % HOME_URL)
+    urlh = compat_urllib_request.urlopen(HOME_URL)
+    webpage = b''
+    while True:
+        webpage += urlh.read(1024)
+        mobj = re.search(br'"swf_ver":"([^"]+)"', webpage)
+        if mobj:
+            break
+    swf_ver = mobj.group(1).decode('utf-8')
+    swf_url = 'http://staticlive.douyutv.com/common/simplayer/core.swf?' + swf_ver
+
+    print('SWF URL is %s' % swf_url)
+
+    return swf_url
 
 
 KEY = b"dkrltl0%4*@jrky#@$"
