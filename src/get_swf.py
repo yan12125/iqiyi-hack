@@ -13,8 +13,6 @@ try:
 except ImportError:
     from urllib import urlretrieve as compat_urllib_request_urlretrieve
 
-import patch
-
 from server import run_server
 from selenium_runner import SeleniumRunner
 from common import full_path
@@ -74,9 +72,7 @@ def patch_swf(target_site, swf_path):
     run(['abcexport', full_path('%s.swf' % swf_name)])
     run(['rabcdasm', full_path('%s.abc' % abc_id)])
     with cd(full_path(abc_id)):
-        pto = patch.fromfile(os.path.join('..', target_site.PATCH_FILENAME))
-        print('Applying ' + target_site.PATCH_FILENAME)
-        pto.apply()
+        run(['patch', '-i', os.path.join('..', target_site.PATCH_FILENAME)])
     run(['rabcasm', full_path('%s/%s.main.asasm' % (abc_id, abc_id))])
     run([
         'abcreplace', full_path('%s.swf' % swf_name), str(abc_index),
