@@ -72,7 +72,9 @@ def patch_swf(target_site, swf_path):
     run(['abcexport', full_path('%s.swf' % swf_name)])
     run(['rabcdasm', full_path('%s.abc' % abc_id)])
     with cd(full_path(abc_id)):
-        run(['patch', '-i', os.path.join('..', target_site.PATCH_FILENAME)])
+        run([
+            'patch', '-i', os.path.join('..', target_site.PATCH_FILENAME),
+            '-p0'])
     run(['rabcasm', full_path('%s/%s.main.asasm' % (abc_id, abc_id))])
     run([
         'abcreplace', full_path('%s.swf' % swf_name), str(abc_index),
