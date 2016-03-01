@@ -1,12 +1,11 @@
 import functools
 import os.path
-try:
-    import http.server as compat_http_server
-except ImportError:
-    import BaseHTTPServer as compat_http_server
 
 from config import PORT
-from common import full_path
+from common import (
+    compat_http_server,
+    full_path,
+)
 
 
 # BaseHTTPRequestHandler is an old-style class, which fails super()
