@@ -13,6 +13,8 @@ try:
 except ImportError:
     from urllib import urlretrieve as compat_urllib_request_urlretrieve
 
+import urllib.parse as compat_urllib_parse
+
 from server import run_server
 from selenium_runner import SeleniumRunner
 from common import full_path
@@ -32,7 +34,8 @@ def write_file(filename, data):
 
 def get_swf(target_site):
     swf_url = target_site.get_site_swf()
-    swf_path = full_path(os.path.basename(swf_url))
+    parts = compat_urllib_parse.urlparse(swf_url)
+    swf_path = full_path(os.path.basename(parts.path))
     compat_urllib_request_urlretrieve(swf_url, filename=swf_path)
 
     if hasattr(target_site, 'decrypt_swf'):
