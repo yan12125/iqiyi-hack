@@ -1,6 +1,10 @@
+import os
 import threading
+import sys
+
 from selenium import webdriver
 from selenium.webdriver.common.proxy import Proxy, ProxyType
+from selenium.webdriver.firefox.firefox_binary import FirefoxBinary
 from selenium.common.exceptions import TimeoutException
 try:
     import pyvirtualdisplay
@@ -33,7 +37,11 @@ class SeleniumRunner(threading.Thread):
             'proxyAutoconfigUrl': 'http://localhost:%d/proxy.pac' % PORT,
         })
 
-        driver = webdriver.Firefox(proxy=proxy)
+        kwargs = {'log_file': sys.stdout}
+        if os.getenv('FIREFOX_PATH'):
+            kwargs['firefox_path'] = os.getenv('FIREFOX_PATH')
+        firefox_binary = FirefoxBinary(**kwargs)
+        driver = webdriver.Firefox(proxy=proxy, firefox_binary=firefox_binary)
         driver.set_page_load_timeout(10)
         try:
             driver.get(self.page_url)
