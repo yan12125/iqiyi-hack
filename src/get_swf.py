@@ -33,7 +33,9 @@ def get_swf(target_site):
     swf_url = target_site.get_site_swf()
     parts = compat_urlparse.urlparse(swf_url)
     swf_path = full_path(os.path.basename(parts.path))
-    compat_urllib_request.urlretrieve(swf_url, filename=swf_path)
+    urlh = compat_urllib_request.urlopen(swf_url)
+    with open(swf_path, 'wb') as f:
+        f.write(urlh.read())
 
     if hasattr(target_site, 'decrypt_swf'):
         old_swf_path = swf_path
