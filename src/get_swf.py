@@ -61,7 +61,12 @@ def cd(path):
 
 def patch_swf(target_site, swf_path):
     swf_name = os.path.splitext(os.path.basename(swf_path))[0]
-    abc_index = 0
+
+    try:
+        abc_index = target_site.PATCH_TARGET_ABC_INDEX
+    except AttributeError:
+        abc_index = 0
+
     abc_id = '%s-%d' % (swf_name, abc_index)
 
     try:
